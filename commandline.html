@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDOS Interface</title>
+    <style>
+        @font-face {
+            font-family: 'pico-8';
+            src: url('pico-8.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'pico-8', sans-serif;
+            background-color: black;
+        }
+
+        h1, h2, h3, h4, h5, h6, span, p, li {
+            color: azure;
+        }
+    </style>
+</head>
+<body>
+    <p>Disk modules in filesys:<br><ul><li>Name</li><li>------</li><li>System</li><br><li>No drives assigned.</li><li>1 drive(s) available.</li><br><li>Done processing startup files in startup.gdod</li><br><li>Type HELP to get support on commands and navigation.</li></ul></p>
+    <span>/></span>
+    <input id="cli-input" type="text" />
+    <div id="cli-output"></div>
+
+    <script>
+        let currentDirectory = '/root';
+
+        async function loadXml() {
+            try {
+                const response = await fetch('data/filesys.xml');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(text, 'application/xml');
+                console.log('XML loaded successfully');
+                return xmlDoc;
+            } catch (error) {
+                console.error('Error loading XML:', error);
+            }
+        }
+
+        function initializeCli(xmlDoc) {
+            const inputElement = document.getElementById('cli-input');
+            inputElement.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    const command = inputElement.value.trim();
+                    console.log(`Command entered: ${command}`);
+                    handleCommand(command, xmlDoc);
+                    inputElement.value = '';
+                }
+            });
+            console.log('CLI initialized');
+        }
+
+        function handleCommand(command, xmlDoc) {
+            const args = command.split(' ');
+            const cmd = args[0];
+            if (cmd === 'cls') {
+                console.log('cls command recognized');
+                listDirectory(xmlDoc, currentDirectory);
+            } else if (cmd === 'help') {
+                // add text
+            } else {
+                displayOutput('Command not recognized.');
+            }
+        }
+
+        function listDirectory(xmlDoc, path) {
+            const outputElement = document.getElementById('cli-output');
+            outputElement.innerHTML = '';
+
+            const directory = getDirectoryByPath(xmlDoc, path);
+
+            if (directory) {
+                const elements = directory.children;
+                for (let elem of elements) {
+                    if (elem.tagName === 'directory' || elem.tagName === 'appdata') {
+                        displayOutput(`[dir] ${elem.tagName}`);
+                    } else {
+                        displayOutput(`${elem.tagName}`);
+                    }
+                }
+            } else {
+                displayOutput('Directory not found.');
+            }
+        }
+
+        function getDirectoryByPath(xmlDoc, path) {
+            const paths = path.split('/');
+            let current = xmlDoc.documentElement;
+
+            for (let i = 1; i < paths.length; i++) {
+                const next = Array.from(current.children).find(child => child.tagName === paths[i]);
+                if (next) {
+                    current = next;
+                } else {
+                    return null;
+                }
+            }
+
+            return current;
+        }
+
+        function displayOutput(message) {
+            const outputElement = document.getElementById('cli-output');
+            const newSpan = document.createElement('span');
+            newSpan.textContent = message;
+            outputElement.appendChild(newSpan);
+            outputElement.appendChild(document.createElement('br'));
+        }
+
+        loadXml().then(xmlDoc => {
+            if (xmlDoc) {
+                console.log('XML Document loaded', xmlDoc);
+            } else {
+                console.log('XML Document not loaded');
+            }
+            initializeCli(xmlDoc);
+        }).catch(error => {
+            console.error('Error initializing CLI:', error);
+        });
+    </script>
+</body>
+</html>

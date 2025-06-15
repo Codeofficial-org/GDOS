@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDOS Interface</title>
+    <style>
+        @font-face {
+            font-family: 'DOS-VGA-437';
+            src: url('DOS-VGA-437.ttf') format('truetype');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #0000AA;
+            font-family: 'DOS-VGA-437', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        footer {
+            width: 100%;
+            background-color: lightgrey;
+            padding: 2px 0;
+            margin-top: auto;
+        }
+
+        .highlighted {
+            position: absolute;
+            width: 100%;
+            height: calc(100% - 24px); /* Adjust to accommodate the footer height */
+            background-color: transparent;
+            color: white;
+            font-family: 'DOS-VGA-437', sans-serif; /* Applies the font to highlighted area */
+            font-size: 24px; /* Ensure the font size matches */
+            pointer-events: none; /* Disable interactions */
+            white-space: pre-wrap; /* Ensure wrapping works correctly */
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .transparent-textarea {
+            width: 100%;
+            height: calc(100% - 24px); /* Adjust to accommodate the footer height */
+            border: none;
+            resize: none;
+            background-color: transparent;
+            color: transparent; /* Make the text transparent */
+            caret-color: white; /* Set caret color to white */
+            position: absolute;
+            top: 0;
+            left: 0;
+            outline: none; /* Removes the black outline when selected */
+            font-family: 'DOS-VGA-437', sans-serif; /* Applies the font to textarea */
+            font-size: 24px; /* Increase the font size */
+            white-space: pre; /* Preserve whitespace */
+        }
+
+        .instruction { color: #FF5555; }
+        .register { color: #55FF55; }
+        .comment { color: #AAAAAA; }
+        .value { color: #55AAFF; }
+    </style>
+</head>
+<body>
+    <div class="highlighted"></div>
+    <textarea class="transparent-textarea"></textarea>
+    <footer>sample text</footer>
+
+    <script>
+        const instructions = [
+            'mov', 'add', 'sub', 'mul', 'div', 'jmp', 'cmp', 'je', 'jne', 'jg', 'jge', 'jl', 'jle', 'call', 'ret', 'push', 'pop'
+        ];
+
+        const registers = [
+            'eax', 'ebx', 'ecx', 'edx', 'esi', 'edi', 'esp', 'ebp', 'ax', 'bx', 'cx', 'dx', 'si', 'di', 'sp', 'bp', 'ah', 'bh', 'ch', 'dh', 'al', 'bl', 'cl', 'dl'
+        ];
+
+        const textarea = document.querySelector('.transparent-textarea');
+        const highlighted = document.querySelector('.highlighted');
+
+        function escapeHTML(unsafe) {
+            return unsafe.replace(/&/g, '&amp;')
+                         .replace(/</g, '&lt;')
+                         .replace(/>/g, '&gt;')
+                         .replace(/"/g, '&quot;')
+                         .replace(/'/g, '&#039;');
+        }
+
+        function highlightSyntax() {
+            const code = escapeHTML(textarea.value);
+            let highlightedCode = code
+                .replace(/(;.*?$|\/\/.*?$)/mg, '<span class="comment">$1</span>') // Comments
+                .replace(new RegExp(`\\b(${instructions.join('|')})\\b`, 'g'), '<span class="instruction">$1</span>') // Instructions
+                .replace(new RegExp(`\\b(${registers.join('|')})\\b`, 'g'), '<span class="register">$1</span>') // Registers
+                .replace(/\b\d+\b/g, '<span class="value">$&</span>'); // Values
+
+            highlighted.innerHTML = highlightedCode.replace(/\n/g, '<br>');
+        }
+
+        function syncScroll() {
+            highlighted.scrollTop = textarea.scrollTop;
+        }
+
+        window.onload = function() {
+            textarea.focus();
+            textarea.addEventListener('input', highlightSyntax);
+            textarea.addEventListener('scroll', syncScroll);
+            textarea.addEventListener('blur', function(e) {
+                setTimeout(function() {
+                    textarea.focus();
+                }, 0);
+            });
+            highlightSyntax(); // Initial highlighting
+        };
+    </script>
+</body>
+</html>

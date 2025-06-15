@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDOS login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+            color: #333;
+            overflow: hidden;
+        }
+        .login-container {
+            text-align: center;
+            background: transparent;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-container input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 90%;
+            font-size: 16px;
+        }
+        .login-container button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .footer img {
+            width: 65px;
+            height: 65px;
+        }
+        .footer a {
+            color: lightgray;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="images/users/default_user.svg">
+        <form onsubmit="return validateLogin()">
+            <input type="text" id="username" placeholder="Username" required><br>
+            <input type="password" id="password" placeholder="Password" required><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <footer class="footer">
+        <img src="images/users/guest_user.svg" onclick="location.href='g_interface.html'" style="cursor: pointer;">
+        <a href="#">Forgot password?</a>
+    </footer>
+    <script>
+        const passwords = {
+            "nikolas": "gamepi",
+            "blake": "1234",
+            "liam": "1234",
+            "dante": "1234",
+            "landon": "1234",
+            "sebastion": "1234",
+            "carlos": "03262015@",
+            "N": "murderdrones",
+            "enzo": "AlphaSigmaEnzo11",
+            "wayne": "567",
+            "john": "123456"
+        };
+
+        function validateLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            
+            if (passwords[username] && passwords[username] === password) {
+                window.location.href = "g_interface.html";
+                return false;
+            } else {
+                alert("Invalid username or password!");
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
