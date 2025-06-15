@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install Linux (Beta)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 3px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            width: 40%;
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-color: #f0f0f0;
+                --text-color: #000;
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --text-color: #fff;
+            }
+        }
+        .username-label {
+            font-size: x-small;
+        }
+        #valueDisplay {
+            position: absolute;
+            background: #007bff;
+            color: #fff;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 12px;
+            transform: translate(-50%, -30px);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .slider-container {
+            position: relative;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <img src="linux_icon.svg">
+    <h1>Set up Linux development environment</h1>
+    <p>Change how Linux apps will work.</p>
+    <label for="username">Username</label><br>
+    <input id="username" name="username" required><br><br>
+    <span>
+        Disk size<br>This can be modified later in System Preferences
+    </span>
+    <br><br>
+    <input type="checkbox" name="10gb" id="10GB">Recommended (10 GB)
+    <br><br><br>
+    <div class="slider-container">
+        <input type="range" min="2.0" max="13.0" name="disksize" id="disksize" value="8">
+        <span id="valueDisplay">8</span>
+    </div>
+    <br><br>
+    <a class="button" onclick="location.href='installer-dialogue.html'">Back</a>
+    <a href="https://distrosea.com/" class="button">Next</a>
+    <script>
+        const disksize = document.getElementById('disksize');
+        const valueDisplay = document.getElementById('valueDisplay');
+
+        // Function to update the position and value of the display
+        const updateValueDisplay = () => {
+            const rangeWidth = disksize.offsetWidth;
+            const thumbWidth = 16; // Approximate thumb width (varies by browser)
+            const min = parseFloat(disksize.min);
+            const max = parseFloat(disksize.max);
+            const value = parseFloat(disksize.value);
+
+            // Calculate the position of the display
+            const position = ((value - min) / (max - min)) * (rangeWidth - thumbWidth) + (thumbWidth / 2);
+            valueDisplay.style.left = `${position}px`;
+            valueDisplay.textContent = value.toFixed(1);
+        };
+
+        // Update on input
+        disksize.addEventListener('input', updateValueDisplay);
+
+        // Initial update
+        updateValueDisplay();
+    </script>
+</body>
+</html>

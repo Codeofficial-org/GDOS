@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install Linux (Beta)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px; /* Add some padding for better readability */
+        }
+        h1 {
+            font-size: 24px;
+        }
+        p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 3px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            width: 40%;
+        }
+        /* Light mode */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-color: #f0f0f0;
+                --text-color: #000;
+            }
+        }
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --text-color: #fff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="linux_icon.svg">
+    <h1>Set up Linux development environment</h1>
+    <p>Get tools for development, GDOS apps, and more. Installing Linux will download all default software.</p>
+    <a href="#" onclick="alert('Linux (Beta) is a feature that lets you develop software using GDOS. You can install Linux command line tools, code editors, and IDEs (integrated development environments) on your system. These can be used to write code, create apps, and more.')">Learn more</a>
+    <br>
+    <img src="linux_illustration.png" width="30%">
+    <p>
+        Once you've set up Linux (Beta), you can share files between GDOS and Linux.
+    </p>
+    <a href="#"  class="button" onclick="alert('Canceled')">Cancel</a>
+    <a href="#"  class="button" onclick="location.href='installer-dialogue-disk.html'">Next</a>
+</body>
+</html>
